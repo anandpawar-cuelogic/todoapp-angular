@@ -1,10 +1,10 @@
 <div class="jumbotron">
     <div class="row">
       <div class="col-sm-6"><h2>Todo List</h2></div>
-      <div style="float:right;" class="col-sm-2"><a href="createtodo.html" class="btn btn-primary">Create Todo</a></div>
+      <div style="float:right;" class="col-sm-2"><a ng-href="createtodo" class="btn btn-primary">Create Todo</a></div>
     </div>
     <div class="row">
-      <div class="col-sm-3"><input class="form-control" type="text" placeholder="Search by title" id="inputTitleSearch"/></div>
+      <div class="col-sm-3"><input class="form-control" type="text" placeholder="Search by title" ng-model="searchByTitle.title"/></div>
       <div class="col-sm-4"><b>Status : </b>
         <input type="radio" name="inputStatusSearch" value="all" checked> All 
         <input type="radio" name="inputStatusSearch" value="completed"> Completed 
@@ -20,7 +20,7 @@
     <hr>
     <table id="tbl_todolist" class="table">
         <thead>
-          <th style="text-align:center"><button id="btndeletetodos" class="btn btn-danger">Delete</button></th>
+          <th style="text-align:center"><button id="btndeletetodos" class="btn btn-danger" ng-click="deleteTodos()">Delete</button></th>
             <th>Title</th>
             <th>Target Date</th>
             <th>Status</th>
@@ -29,6 +29,20 @@
             <th></th>
             <th></th>
         </thead>
-        <tbody id="tbl_todolist_tbody"></tbody>
+        <tbody id="tbl_todolist_tbody">
+          <tr ng-show="todos && todos.length>0" ng-repeat="todo in todos | filter: searchByTitle">
+            <td style="text-align:center"><input type="checkbox" ng-model="todo.deleteSelected" /></td>
+            <td><span ng-show="todo.isDone"><del>{{todo.title}}</del></span><span ng-show="!todo.isDone">{{todo.title}}</span></td>
+            <td>{{todo.targetDate}}</td>
+            <td><span ng-show="todo.isDone"><text style='color:green;'><b>Completed</b></text></span><span ng-show="!todo.isDone"><text style='color:red;'><b>Pending</b></text></span></td>
+            <td>{{(todo.targetDate>Date())?"Yes":"No"}}</td>
+            <td>{{todo.categories.join(',')}}</td>
+            <td><button type="button" class="text-success" ng-click="markAsDone(todo)"><i class="fa fa-check-square-o"></i>Mark as done</button></td>
+            <td><a href="/edittodo"><i class="fa fa-edit"></i>Edit</a></td>
+            </tr>
+            <tr ng-show="!todos || todos.length==0">
+              <td colspan="7" style="text-align:center"><b>No records to display</b></td>
+            </tr>
+        </tbody>
     </table>
   </div>

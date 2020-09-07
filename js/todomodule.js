@@ -24,6 +24,10 @@ todoapp.config(function($routeProvider,$locationProvider){
             templateUrl:"profile.html",
             controller:"profileController"
         })
+        .when("/createtodo",{
+            templateUrl:"createtodo.html",
+            controller:"createtodoController"
+        })
 })
 .directive('isEmailExist', function() {
     return {
@@ -112,6 +116,7 @@ todoapp.config(function($routeProvider,$locationProvider){
         var isUserExist=false;
         var userList=JSON.parse(localStorage.getItem('userlist'));
         var loggedInUser;
+        if(userList){
         for(var i=0;i<userList.length;i++){
             if(userList[i].email===logindetails.email && userList[i].password===logindetails.password){
                 isUserExist=true;
@@ -119,6 +124,7 @@ todoapp.config(function($routeProvider,$locationProvider){
                 break;
             }
         }
+    }
         if(isUserExist) {
             $scope.error = '';
             $scope.username = '';
@@ -135,6 +141,58 @@ todoapp.config(function($routeProvider,$locationProvider){
     $rootScope.showProfileNav=true;
     $rootScope.showLogoutNav=true;
     $rootScope.showTodosNav=false;
+
+    var users = JSON.parse(localStorage.getItem("userlist"));
+    var loggedinuser=JSON.parse(sessionStorage.getItem("loggedinuser"));
+    var todoList=users.find( a => a.email == loggedinuser.email).todos;
+
+    $scope.todos=todoList;
+
+    $scope.markAsDone=function(todo){
+        var users = JSON.parse(localStorage.getItem("userlist"));
+        var loggedinuser=JSON.parse(sessionStorage.getItem("loggedinuser"));
+        
+        todo.isDone=true;
+
+        for(var i=0;i<users.length;i++){
+            if(users[i].email==loggedinuser.email){
+                users[i].todos=$scope.todos;
+                break;
+            }
+            
+        }
+        localStorage.setItem("userlist",JSON.stringify(users));
+    }
+
+    $scope.deleteTodos = function () {
+        var r = confirm("Are you sure you want to delete selected todos?");
+        if(r==true){
+            var selected = new Array();
+        for (var i = 0; i < $scope.todos.length; i++) {
+            if ($scope.todos[i].deleteSelected) {
+                selected.push(i);
+            }
+        }
+        for (var i = selected.length - 1; i >= 0; i--) {
+            $scope.todos.splice(selected[i], 1);
+        }
+
+        var users = JSON.parse(localStorage.getItem("userlist"));
+        var loggedinuser=JSON.parse(sessionStorage.getItem("loggedinuser"));
+        for(var i=0;i<users.length;i++){
+            if(users[i].email==loggedinuser.email){
+                users[i].todos=$scope.todos;
+                break;
+            }
+        }
+        localStorage.setItem("userlist",JSON.stringify(users));
+        }
+        else{
+            return false;
+        }
+        
+    };
+
 })
 .controller('logoutController', function($scope,$location){
     $scope.logout = function(){
@@ -193,4 +251,89 @@ todoapp.config(function($routeProvider,$locationProvider){
             displayImg.src = URL.createObjectURL(input.files[0]);
         }
     }
+})
+.controller("createtodoController",function($scope,$rootScope,$location){
+    $rootScope.showProfileNav=false;
+    $rootScope.showLogoutNav=true;
+    $rootScope.showTodosNav=true;
+
+    $scope.public="no";
+    $scope.reminder="no";
+
+    if(localStorage.getItem("lasttodoid")==null){
+        localStorage.setItem("lasttodoid",0);
+    }
+
+    $scope.categories = [{
+        name: 'Office',
+        selected: false
+    }, {
+        name: 'Home',
+        selected: false
+    }, {
+        name: 'Personal',
+        selected: false
+    }];
+
+    $scope.categoryError=false;
+
+    $scope.createTodo=function(){
+        
+
+        var selectedCat=$scope.categories.filter(function(value, index, arr){ return value.selected == true;});
+
+        if(selectedCat && selectedCat.length>0){
+            $scope.categoryError=false;
+            
+            var lasttodoid=Number(localStorage.getItem("lasttodoid"));
+
+        var isReminder=$scope.reminder;
+        var reminderDate;
+        if(isReminder=='yes'){
+            reminderDate=$scope.reminderDate;
+        }
+        else{
+            reminderDate='';
+        }
+
+        var catVals = [];
+        for(var i = 0; i < selectedCat.length; i++)
+        {
+            catVals.push(selectedCat[i].name);
+        }
+
+        var new_todo={
+            id:(lasttodoid+1),
+            title:$scope.title,
+            targetDate:$scope.targetDate,
+            isDone:false,
+            isPublic:$scope.public,
+            reminderDate:reminderDate,
+            categories:catVals,
+            deleteSelected:false
+        }
+        var users = JSON.parse(localStorage.getItem("userlist"));
+        var loggedinuser=JSON.parse(sessionStorage.getItem("loggedinuser"));
+        var todos=users.find( a => a.email == loggedinuser.email).todos;
+        if(!todos){
+            todos=[];
+        }
+        
+        todos.push(new_todo);
+        for(var i=0;i<users.length;i++){
+            if(users[i].email==loggedinuser.email){
+                users[i].todos=todos;
+                break;
+            }
+        }
+        localStorage.setItem("userlist",JSON.stringify(users));
+        localStorage.setItem("lasttodoid",lasttodoid+1);
+        alert("Todo item added succesfully!");
+        $location.path("/todos");
+    }
+          else{
+           $scope.categoryError=true;
+           return false;
+          }
+        }
 })

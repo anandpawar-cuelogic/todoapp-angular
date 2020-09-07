@@ -1,0 +1,82 @@
+<div class="jumbotron">
+            <h2>Create ToDo</h2>
+            <hr>
+            <form name="todoForm" novalidate ng-submit="createTodo()">
+                <div class="form-group row">
+                    <label for="inputFirstName" class="col-sm-2 col-form-label">Title</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" name="title" ng-model="title" placeholder="Title" ng-required="true">
+                      <span id="spn_title" class="text-danger" style="display: none;">Please enter todo title</span>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputLastName" class="col-sm-2 col-form-label">Target Date</label>
+                    <div class="col-sm-3">
+                      <input type="date" class="form-control" name="targetDate" ng-model="targetDate" placeholder="dd-MM-yyyy" ng-required="true">
+                      <span id="spn_targetdate" class="text-danger" style="display: none;">Please enter/select date</span>
+                      <span id="spn_targetdateinvalid" class="text-danger" style="display: none;">Target date must be current or future date only</span>
+                    </div>
+                  </div>
+                  <fieldset class="form-group">
+                    <div class="row">
+                      <label class="col-form-label col-sm-2">Is Public</label>
+                      <div class="col-sm-10">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="public" ng-model="public" value="yes">
+                          <label class="form-check-label" for="rd_public_yes">
+                            Yes
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="public" ng-model="public" value="no">
+                          <label class="form-check-label" for="rd_public_no">
+                            No
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <fieldset class="form-group">
+                    <div class="row">
+                      <label class="col-form-label col-sm-2">Is Reminder</label>
+                      <div class="col-sm-10">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="reminder" ng-model="reminder" value="yes" onclick="handleReminderClick(this);">
+                          <label class="form-check-label" for="rd_reminder_yes">
+                            Yes
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="reminder" ng-model="reminder" value="no" onclick="handleReminderClick(this);">
+                          <label class="form-check-label" for="rd_reminder_no">
+                            No
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </fieldset>
+                  <div id="div_reminderDt" class="form-group row" style="display: none;">
+                    <label for="inputReminderDate" class="col-sm-2 col-form-label">Reminder Date</label>
+                    <div class="col-sm-3">
+                      <input type="date" class="form-control" name="reminderDate" ng-model="reminderDate" placeholder="dd-MM-yyyy" >
+                      <span id="spn_reminderdate" class="text-danger" style="display: none;">Please enter/select date</span>
+                      <span id="spn_reminderdateinvalid" class="text-danger" style="display: none;">Reminder date must be current or future date only</span>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputCategory" class="col-sm-2 col-form-label">Select Category</label>
+                    <div class="col-sm-3">
+                      <div ng-repeat="category in categories">
+                        <input type="checkbox"  id="chk_{{category.name}}" ng-model="category.selected">
+                        <label for="{{category.name}}">{{category.name}}</label>
+                      </div>
+                      <span id="spn_categories" class="text-danger" ng-show="categoryError">Please select category</span>
+                    </div>
+                  </div>
+                <div class="form-group row">
+                  <div class="col-sm-10">
+                    <button type="submit" ng-disabled="todoForm.$invalid" class="btn btn-primary">Create Todo</button>
+                  </div>
+                </div>
+              </form>
+          </div>
