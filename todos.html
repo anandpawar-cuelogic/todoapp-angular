@@ -1,0 +1,34 @@
+<div class="jumbotron">
+    <div class="row">
+      <div class="col-sm-6"><h2>Todo List</h2></div>
+      <div style="float:right;" class="col-sm-2"><a href="createtodo.html" class="btn btn-primary">Create Todo</a></div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3"><input class="form-control" type="text" placeholder="Search by title" id="inputTitleSearch"/></div>
+      <div class="col-sm-4"><b>Status : </b>
+        <input type="radio" name="inputStatusSearch" value="all" checked> All 
+        <input type="radio" name="inputStatusSearch" value="completed"> Completed 
+        <input type="radio" name="inputStatusSearch" value="pending"> Pending
+      </div>
+      <div class="col-sm-4"><b>Category: </b>
+        <input type="checkbox" name="inputCategorySearch" value="office"> Office 
+        <input type="checkbox" name="inputCategorySearch" value="home"> Home 
+        <input type="checkbox" name="inputCategorySearch" value="personal"> Personal
+      </div>
+    </div>
+    
+    <hr>
+    <table id="tbl_todolist" class="table">
+        <thead>
+          <th style="text-align:center"><button id="btndeletetodos" class="btn btn-danger">Delete</button></th>
+            <th>Title</th>
+            <th>Target Date</th>
+            <th>Status</th>
+            <th>Is Overdue</th>
+            <th>Category</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody id="tbl_todolist_tbody"></tbody>
+    </table>
+  </div>
