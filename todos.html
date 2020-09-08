@@ -6,14 +6,14 @@
     <div class="row">
       <div class="col-sm-3"><input class="form-control" type="text" placeholder="Search by title" ng-model="searchByTitle.title"/></div>
       <div class="col-sm-4"><b>Status : </b>
-        <input type="radio" name="inputStatusSearch" value="all" checked> All 
-        <input type="radio" name="inputStatusSearch" value="completed"> Completed 
-        <input type="radio" name="inputStatusSearch" value="pending"> Pending
+        <input type="radio" name="inputStatusSearch" value="all" ng-model="status" ng-click="filterByStatus('all')"> All 
+        <input type="radio" name="inputStatusSearch" value="completed" ng-model="status" ng-click="filterByStatus('completed')"> Completed 
+        <input type="radio" name="inputStatusSearch" value="pending" ng-model="status" ng-click="filterByStatus('pending')"> Pending
       </div>
       <div class="col-sm-4"><b>Category: </b>
-        <input type="checkbox" name="inputCategorySearch" value="office"> Office 
-        <input type="checkbox" name="inputCategorySearch" value="home"> Home 
-        <input type="checkbox" name="inputCategorySearch" value="personal"> Personal
+        <span ng-repeat="category in categories">
+          <input type="checkbox" name="inputCategorySearch" ng-model="category.selected" ng-change="filterByCategory(category.name)"> {{category.name}} 
+        </span>
       </div>
     </div>
     
@@ -30,7 +30,7 @@
             <th></th>
         </thead>
         <tbody id="tbl_todolist_tbody">
-          <tr ng-show="todos && todos.length>0" ng-repeat="todo in todos | filter: searchByTitle">
+          <tr ng-show="filteredtodos && filteredtodos.length>0" ng-repeat="todo in filteredtodos | filter: searchByTitle">
             <td style="text-align:center"><input type="checkbox" ng-model="todo.deleteSelected" /></td>
             <td><span ng-show="todo.isDone"><del>{{todo.title}}</del></span><span ng-show="!todo.isDone">{{todo.title}}</span></td>
             <td>{{todo.targetDate}}</td>
@@ -38,9 +38,9 @@
             <td>{{(todo.targetDate>Date())?"Yes":"No"}}</td>
             <td>{{todo.categories.join(',')}}</td>
             <td><button type="button" class="text-success" ng-click="markAsDone(todo)"><i class="fa fa-check-square-o"></i>Mark as done</button></td>
-            <td><a href="/edittodo"><i class="fa fa-edit"></i>Edit</a></td>
+            <td><a href="/edittodo/{{todo.id}}"><i class="fa fa-edit"></i>Edit</a></td>
             </tr>
-            <tr ng-show="!todos || todos.length==0">
+            <tr ng-show="!filteredtodos || filteredtodos.length==0">
               <td colspan="7" style="text-align:center"><b>No records to display</b></td>
             </tr>
         </tbody>

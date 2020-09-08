@@ -1,0 +1,86 @@
+<div class="jumbotron">
+    <h2>Edit ToDo</h2>
+    <hr>
+    <form>
+        <input id="inputId" type="hidden" name="todoid" value="" />
+        <div class="form-group row">
+            <label for="inputTitle" class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="inputTitle" placeholder="Title">
+              <span id="spn_title" class="text-danger" style="display: none;">Please enter todo title</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputTargateDate" class="col-sm-2 col-form-label">Target Date</label>
+            <div class="col-sm-3">
+              <input type="date" class="form-control" id="inputTargetDate" placeholder="dd-MM-yyyy">
+              <span id="spn_targetdate" class="text-danger" style="display: none;">Please enter/select date</span>
+              <span id="spn_targetdateinvalid" class="text-danger" style="display: none;">Invalid Date</span>
+            </div>
+          </div>
+          <fieldset class="form-group">
+            <div class="row">
+              <label class="col-form-label col-sm-2">Is Public</label>
+              <div class="col-sm-10">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="public" id="rd_public_yes" value="yes">
+                  <label class="form-check-label" for="rd_public_yes">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="public" id="rd_public_no" value="no">
+                  <label class="form-check-label" for="rd_public_no">
+                    No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <div class="row">
+              <label class="col-form-label col-sm-2">Is Reminder</label>
+              <div class="col-sm-10">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="reminder" id="rd_reminder_yes" value="yes" onclick="handleReminderClick(this);">
+                  <label class="form-check-label" for="rd_reminder_yes">
+                    Yes
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="reminder" id="rd_reminder_no" value="no" onclick="handleReminderClick(this);">
+                  <label class="form-check-label" for="rd_reminder_no">
+                    No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <div id="div_reminderDt" class="form-group row">
+            <label for="inputReminderDate" class="col-sm-2 col-form-label">Reminder Date</label>
+            <div class="col-sm-3">
+              <input type="date" class="form-control" id="inputReminderDate" placeholder="dd-MM-yyyy" >
+              <span id="spn_reminderdate" class="text-danger" style="display: none;">Please enter/select date</span>
+              <span id="spn_reminderdateinvalid" class="text-danger" style="display: none;">Reminder date must be current or future date only</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputCategory" class="col-sm-2 col-form-label">Select Category</label>
+            <div class="col-sm-3">
+              <input type="checkbox"  id="chk_office" name="inputCategory" value="office">
+              <label for="office">Office</label>
+              <input type="checkbox" id="chk_home" name="inputCategory" value="home">
+              <label for="home">Home</label>
+              <input type="checkbox" id="chk_personal" name="inputCategory" value="personal">
+              <label for="personal">Personal</label>
+              <span id="spn_categories" class="text-danger" style="display: none;">Please select category</span>
+            </div>
+          </div>
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <button id="btnEditTodo" type="submit" class="btn btn-primary">Update Todo</button>
+          </div>
+          <div class="col-sm-2"><a href="todos.html">Back to Todos</a></div>
+        </div>
+      </form>
+  </div>

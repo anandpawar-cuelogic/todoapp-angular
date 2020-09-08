@@ -28,6 +28,10 @@ todoapp.config(function($routeProvider,$locationProvider){
             templateUrl:"createtodo.html",
             controller:"createtodoController"
         })
+        .when("/edittodo/:id",{
+            templateUrl:"edittodo.html",
+            controller:"edittodoController"
+        })
 })
 .directive('isEmailExist', function() {
     return {
@@ -142,11 +146,25 @@ todoapp.config(function($routeProvider,$locationProvider){
     $rootScope.showLogoutNav=true;
     $rootScope.showTodosNav=false;
 
+    $scope.status="all";
+
     var users = JSON.parse(localStorage.getItem("userlist"));
     var loggedinuser=JSON.parse(sessionStorage.getItem("loggedinuser"));
     var todoList=users.find( a => a.email == loggedinuser.email).todos;
 
     $scope.todos=todoList;
+    $scope.filteredtodos=todoList
+
+    $scope.categories = [{
+        name: 'Office',
+        selected: false
+    }, {
+        name: 'Home',
+        selected: false
+    }, {
+        name: 'Personal',
+        selected: false
+    }];
 
     $scope.markAsDone=function(todo){
         var users = JSON.parse(localStorage.getItem("userlist"));
@@ -192,6 +210,39 @@ todoapp.config(function($routeProvider,$locationProvider){
         }
         
     };
+
+    $scope.filterByStatus=function(category){
+        if(category=="all"){
+            $scope.filteredtodos=$scope.todos;
+        }
+        else if(category=="completed"){
+            $scope.filteredtodos=$scope.todos.filter(function(value, index, arr){ return value.isDone == true;});
+        }
+        else if(category=="pending"){
+            $scope.filteredtodos=$scope.todos.filter(function(value, index, arr){ return value.isDone == false;});
+        }
+           
+    }
+
+    $scope.filterByCategory=function(category){
+        var catVals=[];
+        for(var i=0;i<$scope.categories.length;i++){
+            if( $scope.categories[i].selected==true){
+                catVals.push($scope.categories[i].name);
+            }
+            
+        }
+        
+        if(catVals.length>0){
+            $scope.filteredtodos=$scope.todos.filter(function(value, index, arr){ return value.categories.some(r=>catVals.includes(r))});
+        }
+        else{
+            $scope.filteredtodos=$scope.todos;
+        }
+    }
+    // $scope.$watch('modelName', function(newValue, oldValue){
+    //     // Do anything you like here
+    // });
 
 })
 .controller('logoutController', function($scope,$location){
@@ -336,4 +387,9 @@ todoapp.config(function($routeProvider,$locationProvider){
            return false;
           }
         }
+})
+.controller("edittodoController",function($scope,$rootScope,$location){
+    $rootScope.showProfileNav=false;
+    $rootScope.showLogoutNav=true;
+    $rootScope.showTodosNav=true;
 })
